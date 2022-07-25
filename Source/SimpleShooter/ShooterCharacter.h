@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "ShooterCharacter.generated.h"
 
+
 UCLASS()
 class SIMPLESHOOTER_API AShooterCharacter : public ACharacter
 {
@@ -32,6 +33,18 @@ private:
 	void StrafeRight(float AxisValue);
 	void Pitch(float AxisValue);
 	void Yaw(float AxisValue);
+
+	UPROPERTY(EditAnywhere)
+	float RotationRate = 75;
+
+	/** SpringArmComponent handles the camera location for the third person perspective */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	class USpringArmComponent* SpringArmComponent;
+
+	/** CameraComponent is where the player camera sits on the far end of the SpringArm, enabling third person prespective. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	class UCameraComponent* CameraComponent;
+	
 };
 
 
