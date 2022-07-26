@@ -43,7 +43,13 @@ private:
 
 	/** CameraComponent is where the player camera sits on the far end of the SpringArm, enabling third person prespective. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* CameraComponent;	
+	class UCameraComponent* CameraComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class AGun> GunClass;
+
+	UPROPERTY()
+	AGun* Gun;
 };
 
 
