@@ -34,4 +34,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	UParticleSystem* MuzzleFlashParticleSystem;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	float MaxRange = 5000;
+
+	void DrawCameraDebug();
 };

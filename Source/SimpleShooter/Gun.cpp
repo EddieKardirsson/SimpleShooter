@@ -6,6 +6,8 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SceneComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "DrawDebugHelpers.h"
+#include "ShooterCharacter.h"
 
 // Sets default values
 AGun::AGun()
@@ -24,8 +26,7 @@ AGun::AGun()
 void AGun::BeginPlay()
 {
 	Super::BeginPlay();
-
-		
+			
 }
 
 // Called every frame
@@ -40,6 +41,28 @@ void AGun::PullTrigger()
 	if(MuzzleFlashParticleSystem)
 	{
 		UGameplayStatics::SpawnEmitterAttached(MuzzleFlashParticleSystem, SkeletalMeshComponent, TEXT("MuzzleFlashSocket"));		
+	}
+	DrawCameraDebug();
+}
+
+void AGun::DrawCameraDebug()
+{
+	AController* Controller = Cast<AShooterCharacter>(GetOwner())->GetController();
+	if (!Controller)return;
+
+	FVector Location{};
+	FRotator Rotation{};
+	Controller->GetPlayerViewPoint(Location, Rotation);
+
+	FVector End = Location + Rotation.Vector() * MaxRange;	
+
+
+	FHitResult HitResult;
+	bool bHitSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, Location, End, ECC_GameTraceChannel1, FCollisionQueryParams::DefaultQueryParam, FCollisionResponseParams::DefaultResponseParam);
+	if(bHitSuccess)
+	{
+		DrawDebugPoint(GetWorld(), HitResult.ImpactPoint, 10, FColor::Red, false, 4);
+
 	}
 }
 
