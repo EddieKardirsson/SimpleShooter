@@ -38,7 +38,7 @@ void AGun::Tick(float DeltaTime)
 
 void AGun::PullTrigger()
 {
-	if(!MuzzleFlashParticleSystem)
+	if(MuzzleFlashParticleSystem)
 	{
 		UGameplayStatics::SpawnEmitterAttached(MuzzleFlashParticleSystem, SkeletalMeshComponent, TEXT("MuzzleFlashSocket"));		
 	}
