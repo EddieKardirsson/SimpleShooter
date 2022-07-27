@@ -36,7 +36,13 @@ private:
 	UParticleSystem* MuzzleFlashParticleSystem;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
+	UParticleSystem* HitImpactParticles;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
 	float MaxRange = 5000;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	float Damage = 10;
 
 	void DrawCameraDebug();
 };

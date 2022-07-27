@@ -38,7 +38,7 @@ void AGun::Tick(float DeltaTime)
 
 void AGun::PullTrigger()
 {
-	if(MuzzleFlashParticleSystem)
+	if(!MuzzleFlashParticleSystem)
 	{
 		UGameplayStatics::SpawnEmitterAttached(MuzzleFlashParticleSystem, SkeletalMeshComponent, TEXT("MuzzleFlashSocket"));		
 	}
@@ -55,14 +55,20 @@ void AGun::DrawCameraDebug()
 	Controller->GetPlayerViewPoint(Location, Rotation);
 
 	FVector End = Location + Rotation.Vector() * MaxRange;	
-
-
+	
 	FHitResult HitResult;
-	bool bHitSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, Location, End, ECC_GameTraceChannel1, FCollisionQueryParams::DefaultQueryParam, FCollisionResponseParams::DefaultResponseParam);
+	bool bHitSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, Location, End, ECC_GameTraceChannel1);
+	DrawDebugLine(GetWorld(), Location, End, FColor::Red, true);
 	if(bHitSuccess)
 	{
-		DrawDebugPoint(GetWorld(), HitResult.ImpactPoint, 10, FColor::Red, false, 4);
-
+		DrawDebugPoint(GetWorld(), HitResult.Location, 10, FColor::Red, false, 4);
+		FVector ShotDirection = -Rotation.Vector();
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitImpactParticles, HitResult.Location,ShotDirection.Rotation());
+		if(auto HitActor = HitResult.GetActor())
+		{
+			FPointDamageEvent DamageEvent(Damage, HitResult, ShotDirection, nullptr);
+			HitActor->TakeDamage(Damage, DamageEvent, Controller, this);
+		}
 	}
 }
 
