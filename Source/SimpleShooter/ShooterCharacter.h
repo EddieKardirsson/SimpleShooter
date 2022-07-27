@@ -27,6 +27,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
 private:	
 
 	void MoveForward(float AxisValue);
@@ -37,6 +39,12 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float RotationRate = 75;
+
+	UPROPERTY(EditDefaultsOnly, Category = "MainStats | Resources")
+	float MaxHealth = 100;
+
+	UPROPERTY(VisibleAnywhere, Category = "MainStats | Resources")
+	float Health;
 
 	/** SpringArmComponent handles the camera location for the third person perspective */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
