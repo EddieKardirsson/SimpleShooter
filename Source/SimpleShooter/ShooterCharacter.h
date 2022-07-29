@@ -38,7 +38,12 @@ private:
 	void StrafeRight(float AxisValue);
 	void Pitch(float AxisValue);
 	void Yaw(float AxisValue);
+
+public:
+
 	void Shoot();
+
+private:
 
 	UPROPERTY(EditAnywhere)
 	float RotationRate = 75;

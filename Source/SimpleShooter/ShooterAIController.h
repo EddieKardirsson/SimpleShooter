@@ -26,15 +26,10 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 
+
 private:
 
-	UPROPERTY(EditAnywhere, Category = "Combat | Movement");
-	float AcceptanceRadius = 200;
+	UPROPERTY(EditAnywhere, Category = "AI")
+	UBehaviorTree* AIBehavior;
 
-public:
-
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	float GetAcceptanceRadius() const { return AcceptanceRadius; }
-	UFUNCTION(BlueprintCallable)
-	void SetAcceptanceRadius(const float AcceptanceRadiusValue) { AcceptanceRadius = AcceptanceRadiusValue; }
 };
