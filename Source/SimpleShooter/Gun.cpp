@@ -57,7 +57,10 @@ void AGun::DrawCameraDebug()
 	FVector End = Location + Rotation.Vector() * MaxRange;	
 	
 	FHitResult HitResult;
-	bool bHitSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, Location, End, ECC_GameTraceChannel1);
+	FCollisionQueryParams CollisionQueryParams;
+	CollisionQueryParams.AddIgnoredActor(this);
+	CollisionQueryParams.AddIgnoredActor(GetOwner());
+	bool bHitSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, Location, End, ECC_GameTraceChannel1,CollisionQueryParams);
 	DrawDebugLine(GetWorld(), Location, End, FColor::Red, true);
 	if(bHitSuccess)
 	{
