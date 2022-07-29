@@ -2,12 +2,21 @@
 
 
 #include "ShooterPlayerController.h"
-//#include "TimerManager.h"
+#include "TimerManager.h"
+#include "Blueprint/UserWidget.h"
+
+AShooterPlayerController::AShooterPlayerController()
+{
+}
 
 void AShooterPlayerController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 {
 	Super::GameHasEnded(EndGameFocus, bIsWinner);
 
-	UE_LOG(LogTemp, Warning, TEXT("GAME OVER! n00b"));
+	UUserWidget* LoseScreen = CreateWidget(this, LoseScreenClass);
+	if(LoseScreen)
+	{
+		LoseScreen->AddToViewport();
+	}
 	GetWorldTimerManager().SetTimer(RestartTimerHandle, this, &APlayerController::RestartLevel, RestartDelay);
 }
