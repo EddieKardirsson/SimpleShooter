@@ -47,10 +47,16 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	float MaxRange = 5000;
 
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	float Damage = 10;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = true))
+	float BaseDamage = 10;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = true))
+	float PlayerDamageMultiplier = 2.5;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = true))
+	float EnemyDamageMultiplier = 1;
 
 	bool GunTrace(FHitResult& OutHit, FVector& ShotDirection);
 
-	AController* GetOwnerController() const;
+	AController* GetOwnerController() const;			
 };

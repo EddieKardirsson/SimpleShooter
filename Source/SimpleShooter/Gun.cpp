@@ -6,7 +6,6 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SceneComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "DrawDebugHelpers.h"
 #include "ShooterCharacter.h"
 
 // Sets default values
@@ -25,8 +24,7 @@ AGun::AGun()
 // Called when the game starts or when spawned
 void AGun::BeginPlay()
 {
-	Super::BeginPlay();
-			
+	Super::BeginPlay();	
 }
 
 // Called every frame
@@ -45,16 +43,14 @@ void AGun::PullTrigger()
 	
 	bool bHitSuccess = GunTrace(HitResult, ShotDirection);
 	if (bHitSuccess)
-	{
-		DrawDebugPoint(GetWorld(), HitResult.Location, 10, FColor::Red, false, 4);
-		
+	{		
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitImpactParticles, HitResult.Location, ShotDirection.Rotation());
 		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), HitImpactSoundBase, HitResult.Location, ShotDirection.Rotation());
 		if (auto HitActor = HitResult.GetActor())
 		{
-			FPointDamageEvent DamageEvent(Damage, HitResult, ShotDirection, nullptr);
+			FPointDamageEvent DamageEvent(BaseDamage, HitResult, ShotDirection, nullptr);
 			AController* Controller = GetOwnerController();
-			HitActor->TakeDamage(Damage, DamageEvent, Controller, this);
+			HitActor->TakeDamage(BaseDamage, DamageEvent, Controller, this);
 		}
 	}
 }
@@ -76,7 +72,7 @@ bool AGun::GunTrace(FHitResult& OutHit, FVector& ShotDirection)
 	FCollisionQueryParams CollisionQueryParams;
 	CollisionQueryParams.AddIgnoredActor(this);
 	CollisionQueryParams.AddIgnoredActor(GetOwner());
-	DrawDebugLine(GetWorld(), Location, End, FColor::Red, true);
+	
 	return GetWorld()->LineTraceSingleByChannel(OutHit, Location, End, ECC_GameTraceChannel1, CollisionQueryParams);
 }
 

@@ -30,7 +30,10 @@ public:
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	UFUNCTION(BlueprintPure)
-	bool IsDead() const;	
+	bool IsDead() const;
+
+	UFUNCTION(BlueprintPure)
+	float GetHealthPercentage() const;
 
 private:	
 
@@ -52,7 +55,7 @@ private:
 	float MaxHealth = 100;
 
 	UPROPERTY(VisibleAnywhere, Category = "MainStats | Resources")
-	float Health;
+	float Health = 1;
 
 	/** SpringArmComponent handles the camera location for the third person perspective */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))

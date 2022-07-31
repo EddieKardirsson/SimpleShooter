@@ -88,6 +88,8 @@ float AShooterCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 
 bool AShooterCharacter::IsDead() const { return Health <= 0; }
 
+float AShooterCharacter::GetHealthPercentage() const { return Health / MaxHealth; }
+
 void AShooterCharacter::MoveForward(float AxisValue)
 {
 	AddMovementInput(GetActorForwardVector() * AxisValue);
