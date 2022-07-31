@@ -51,7 +51,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	float RotationRate = 75;
 
-	UPROPERTY(EditDefaultsOnly, Category = "MainStats | Resources")
+	UPROPERTY(EditAnywhere, Category = "MainStats | Resources")
 	float MaxHealth = 100;
 
 	UPROPERTY(VisibleAnywhere, Category = "MainStats | Resources")
