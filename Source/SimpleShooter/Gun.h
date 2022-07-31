@@ -34,9 +34,15 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	UParticleSystem* MuzzleFlashParticleSystem;
+	
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	USoundBase* MuzzleSoundBase;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	UParticleSystem* HitImpactParticles;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	USoundBase* HitImpactSoundBase;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	float MaxRange = 5000;
@@ -44,5 +50,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	float Damage = 10;
 
-	void DrawCameraDebug();
+	bool GunTrace(FHitResult& OutHit, FVector& ShotDirection);
+
+	AController* GetOwnerController() const;
 };

@@ -32,46 +32,58 @@ void AGun::BeginPlay()
 // Called every frame
 void AGun::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-
+	Super::Tick(DeltaTime);	
 }
 
 void AGun::PullTrigger()
-{
-	if(MuzzleFlashParticleSystem)
-	{
-		UGameplayStatics::SpawnEmitterAttached(MuzzleFlashParticleSystem, SkeletalMeshComponent, TEXT("MuzzleFlashSocket"));		
-	}
-	DrawCameraDebug();
-}
-
-void AGun::DrawCameraDebug()
-{
-	AController* Controller = Cast<AShooterCharacter>(GetOwner())->GetController();
-	if (!Controller)return;
-
-	FVector Location{};
-	FRotator Rotation{};
-	Controller->GetPlayerViewPoint(Location, Rotation);
-
-	FVector End = Location + Rotation.Vector() * MaxRange;	
+{	
+	UGameplayStatics::SpawnEmitterAttached(MuzzleFlashParticleSystem, SkeletalMeshComponent, TEXT("MuzzleFlashSocket"));
+	UGameplayStatics::SpawnSoundAttached(MuzzleSoundBase, SkeletalMeshComponent, TEXT("MuzzleFlashSocket"));
 	
 	FHitResult HitResult;
-	FCollisionQueryParams CollisionQueryParams;
-	CollisionQueryParams.AddIgnoredActor(this);
-	CollisionQueryParams.AddIgnoredActor(GetOwner());
-	bool bHitSuccess = GetWorld()->LineTraceSingleByChannel(HitResult, Location, End, ECC_GameTraceChannel1,CollisionQueryParams);
-	DrawDebugLine(GetWorld(), Location, End, FColor::Red, true);
-	if(bHitSuccess)
+	FVector ShotDirection;
+	
+	bool bHitSuccess = GunTrace(HitResult, ShotDirection);
+	if (bHitSuccess)
 	{
 		DrawDebugPoint(GetWorld(), HitResult.Location, 10, FColor::Red, false, 4);
-		FVector ShotDirection = -Rotation.Vector();
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitImpactParticles, HitResult.Location,ShotDirection.Rotation());
-		if(auto HitActor = HitResult.GetActor())
+		
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitImpactParticles, HitResult.Location, ShotDirection.Rotation());
+		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), HitImpactSoundBase, HitResult.Location, ShotDirection.Rotation());
+		if (auto HitActor = HitResult.GetActor())
 		{
 			FPointDamageEvent DamageEvent(Damage, HitResult, ShotDirection, nullptr);
+			AController* Controller = GetOwnerController();
 			HitActor->TakeDamage(Damage, DamageEvent, Controller, this);
 		}
 	}
 }
+
+bool AGun::GunTrace(FHitResult& OutHit, FVector& ShotDirection)
+{
+	AController* Controller = GetOwnerController();
+	if(!Controller)
+	{
+		return false;
+	}
+
+	FVector Location{};
+	FRotator Rotation{};
+	Controller->GetPlayerViewPoint(Location, Rotation);
+	ShotDirection = -Rotation.Vector();
+	FVector End = Location + Rotation.Vector() * MaxRange;
+	
+	FCollisionQueryParams CollisionQueryParams;
+	CollisionQueryParams.AddIgnoredActor(this);
+	CollisionQueryParams.AddIgnoredActor(GetOwner());
+	DrawDebugLine(GetWorld(), Location, End, FColor::Red, true);
+	return GetWorld()->LineTraceSingleByChannel(OutHit, Location, End, ECC_GameTraceChannel1, CollisionQueryParams);
+}
+
+AController* AGun::GetOwnerController() const
+{	
+	return Cast<AShooterCharacter>(GetOwner())->GetController();	
+}
+
+
 
